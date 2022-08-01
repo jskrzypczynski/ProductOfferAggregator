@@ -1,6 +1,6 @@
 package com.jskrzypczynski.poa.file
 
-import cats.effect.{IO, IOApp}
+import cats.effect.IO
 import cats.implicits.toFunctorFilterOps
 import com.jskrzypczynski.poa.config.FileReaderConfig
 import com.jskrzypczynski.poa.domain.Offer

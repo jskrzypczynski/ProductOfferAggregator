@@ -9,9 +9,7 @@ import doobie.h2._
 import doobie.implicits._
 import doobie.util.ExecutionContexts
 
-import java.util.UUID
-
-case class AggregationResult(productCode: String, minPrice: Int, maxPrice: Int, average: Float, numOffers: Int, status: String, offers: String) {
+case class AggregationResult(productCode: String, minPrice: Float, maxPrice: Float, average: Float, numOffers: Int, status: String, offers: String) {
   def transferToAggregation(): Option[Aggregation] = {
     offers.split(";;").toVector.traverse(parseOffer).map(offers =>
       Aggregation(productCode, minPrice, maxPrice, average, numOffers, status, offers))
@@ -26,7 +24,6 @@ case class AggregationResult(productCode: String, minPrice: Int, maxPrice: Int, 
 
   }
 }
-
 
 class AggregationDb(transactor: H2Transactor[IO]) {
 
@@ -48,6 +45,10 @@ class AggregationDb(transactor: H2Transactor[IO]) {
 
   def getProductCodeWithHighestOffersCount(): IO[Vector[ProductCodeWithHighestOffersCount]] = {
     getAggregationWithHighestOffersCountQuery().transact(transactor)
+  }
+  
+  def truncateTable(): IO[Unit] = {
+    truncateTableQuery().transact(transactor).void
   }
 
   private def findAggregationQuery(productCode: String): ConnectionIO[Option[AggregationResult]] = {
@@ -75,6 +76,10 @@ class AggregationDb(transactor: H2Transactor[IO]) {
   private def getAggregationWithHighestOffersCountQuery(): ConnectionIO[Vector[ProductCodeWithHighestOffersCount]] = {
     (sql"Select productCode, MAX(numOffers) as maxNumOfOffers FROM aggregations group by productCode").query[ProductCodeWithHighestOffersCount].to[Vector]
   }
+  
+  private def truncateTableQuery(): ConnectionIO[Int] = {
+    sql"Truncate table aggregations".update.run
+  }
 
 }
 
@@ -82,7 +87,7 @@ class AggregationDb(transactor: H2Transactor[IO]) {
 object Database {
 
   private val createTableSql =
-    sql"""Create TABLE aggregations (productCode VARCHAR(200), minPrice Integer, maxPrice Integer, avg DECIMAL(15,4), numOffers INTEGER, status VARCHAR(20), offers CHARACTER LARGE OBJECT)
+    sql"""Create TABLE aggregations (productCode VARCHAR(200), minPrice NUMERIC(20, 2), maxPrice NUMERIC(20, 2), avg NUMERIC(20, 2), numOffers INTEGER, status VARCHAR(20), offers CHARACTER LARGE OBJECT)
          |""".stripMargin
 
   def apply(config: DatabaseConfig): Resource[IO, AggregationDb] = {

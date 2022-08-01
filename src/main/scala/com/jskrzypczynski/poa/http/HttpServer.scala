@@ -7,14 +7,13 @@ import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
 
-
 class HttpServer(aggregationRoutes: AggregationRoutes, config: HttpServerConfig) {
 
   val api = Router(
     "api/aggregation/find" -> aggregationRoutes.getAggregation,
     "api/aggregation/close" -> aggregationRoutes.closeAggregation,
     "api/offer/supply" -> aggregationRoutes.supplyOffer,
-    "api/aggregation/highestOffer" ->  aggregationRoutes.getProductCodeWithHighestOffersCount
+    "api/aggregation/highestOffer" -> aggregationRoutes.getProductCodeWithHighestOffersCount
   ).orNotFound
 
   def start(): IO[Unit] =

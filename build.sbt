@@ -18,7 +18,7 @@ scalacOptions ++= Seq(
 
 val commonSettings = Seq(
   organization := "jskrzypczynski",
-  libraryDependencies ++= Seq(log4j) ++ circe ++ cats ++ fs2 ++ doobie ++ http4s ++ pureconfig,
+  libraryDependencies ++= Seq(log4j) ++ circe ++ cats ++ fs2 ++ doobie ++ http4s ++ pureconfig ++ Seq(scalatest),
   addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"))
 
 

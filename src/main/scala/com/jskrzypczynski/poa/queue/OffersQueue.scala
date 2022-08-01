@@ -3,7 +3,7 @@ package com.jskrzypczynski.poa.queue
 import cats.effect.std.Queue
 import cats.effect.{IO, Resource}
 import com.jskrzypczynski.poa.aggregation.OffersAggregator
-import com.jskrzypczynski.poa.config.{Config, QueueConfig}
+import com.jskrzypczynski.poa.config.QueueConfig
 import com.jskrzypczynski.poa.domain.Offer
 import fs2.Stream
 import org.typelevel.log4cats.Logger
@@ -21,9 +21,9 @@ class OffersQueue private(queue: Queue[IO, Option[Offer]],
     }
   }
 
-  private def runQueue(): IO[Unit] = Stream.fromQueueNoneTerminated(queue).evalMap { offer =>
-    offersAggregator.aggregateOffer(offer)
-  }.compile
+  private def runQueue(): IO[Unit] = Stream.fromQueueNoneTerminated(queue)
+    .evalMap(offer => offersAggregator.aggregateOffer(offer))
+    .compile
     .drain
     .guarantee(logger.info(s"Processing offers by OffersQueue terminated"))
 
