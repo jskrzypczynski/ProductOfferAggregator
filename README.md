@@ -115,3 +115,12 @@ To build Fat-Jar you need to run `sbt assembly` command
 
 example of application run from terminal:
 `java -jar target/scala-2.13/ProductOfferAggregator-assembly-0.1.jar /ProductOfferAggregator/src/main/resources/application.conf `
+
+
+## Further development
+
+Application could be improve/enhance in many areas:
+- replace the SQL database with a in-memory data structure (cats.effect.Ref[F])
+- add authorization and authentication to Rest AP
+- Offers persistence as a separate table
+- Add more unit tests and integration tests
