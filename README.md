@@ -111,6 +111,9 @@ database {
 
 ## Application build and run
 
+Important:
+ Application was developed with Java 11 and Scala 2.13
+
 To build Fat-Jar you need to run `sbt assembly` command
 
 example of application run from terminal:
