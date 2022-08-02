@@ -1,16 +1,16 @@
 # ProductOfferAggregator
 
-This is small product offer aggregator, every offer has two fields "price" and "productCode". Whats app gives you is a aggregation of offers
+This is small product offer aggregator, every offer has two fields "price" and "productCode". What app gives you is a aggregation for every offer.
 with fields: min, max, average price, count of offers.
 
-Please note that this application is not production ready and too complicated (over-engineered) in some places for demonstration purposes
+Please note that this application is not production ready and too complicated (over-engineered) in some places for demonstration purposes.
 
 ## Database layer
 
 Application use simple H2 database (it allows set up the application environment very easily), the only parameter that we have to bring is
 connection pool size.
 
-With application startup 'aggregations' table is created (it is persistance layer for offers aggregations), table schema:
+With application startup `aggregations` table is created (it is persistence layer for offers aggregations), table schema:
 
 ```
 productCode VARCHAR(200)
@@ -74,7 +74,7 @@ Application uses fs2 Queue in order to transmit offers for aggregation, you can 
 ## Initial offers reading
 
 The application allows you to get offers from a file at startup, you need to provide path, batch-size and max-concurrent-reads parameters,
-also startup-aggregation parameter is need to be set to true.
+also startup-aggregation parameter is need to be set to `true`.
 
 File have to be in specific format (CSV), with columns:
 
@@ -116,11 +116,14 @@ To build Fat-Jar you need to run `sbt assembly` command
 example of application run from terminal:
 `java -jar target/scala-2.13/ProductOfferAggregator-assembly-0.1.jar /ProductOfferAggregator/src/main/resources/application.conf `
 
+## Logging
+
+Application support logging with log4j
 
 ## Further development
 
-Application could be improve/enhance in many areas:
-- replace the SQL database with a in-memory data structure (cats.effect.Ref[F])
-- add authorization and authentication to Rest AP
+Application could be improved/enhance in many areas:
+- replace the SQL database with an in-memory data structure (cats.effect.Ref[F])
+- add authorization and authentication to Rest API
 - Offers persistence as a separate table
 - Add more unit tests and integration tests

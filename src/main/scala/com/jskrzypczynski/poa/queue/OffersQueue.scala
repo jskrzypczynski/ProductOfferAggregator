@@ -16,7 +16,7 @@ class OffersQueue private(queue: Queue[IO, Option[Offer]],
 
   def enqueueOffer(offer: Offer): IO[Unit] = {
     queue.tryOffer(Some(offer)).flatMap {
-      case true => logger.debug(s"Successfully enqueued offer")
+      case true => logger.debug(s"Successfully enqueued offer.")
       case false => logger.warn(s"Dropping Offer due to full queue.")
     }
   }
@@ -25,7 +25,7 @@ class OffersQueue private(queue: Queue[IO, Option[Offer]],
     .evalMap(offer => offersAggregator.aggregateOffer(offer))
     .compile
     .drain
-    .guarantee(logger.info(s"Processing offers by OffersQueue terminated"))
+    .guarantee(logger.info(s"Processing offers by OffersQueue terminated."))
 
   private def initiateShutdown(): IO[Unit] =
     logger.info("Starting graceful shutdown off OffersAggregatorQueue.") >>

@@ -14,7 +14,7 @@ class OffersAggregator(aggregationDb: AggregationDb) {
     for {
       aggregation <- aggregationDb.findAggregation(offer.productCode)
       _ <- aggregation match {
-        case Some(agg) if agg.status.toLowerCase == "open" => enhanceExistingAggregation(offer, agg)
+        case Some(agg) if agg.status.trim.toLowerCase == "open" => enhanceExistingAggregation(offer, agg)
         case Some(_) => logger.warn(s"Aggregation for offer: [${offer.productCode}] is already closed")
         case None => createNewAggregation(offer)
       }
@@ -34,7 +34,7 @@ class OffersAggregator(aggregationDb: AggregationDb) {
 
   private def createNewAggregation(offer: Offer): IO[Unit] = for {
     _ <- IO.unit
-    aggregation = Aggregation(offer.productCode, offer.price, offer.price, offer.price, 1, "Open", Vector(offer))
+    aggregation = Aggregation(offer.productCode, offer.price, offer.price, offer.price, 1, "open", Vector(offer))
     _ <- aggregationDb.insertAggregation(aggregation)
   } yield ()
 
